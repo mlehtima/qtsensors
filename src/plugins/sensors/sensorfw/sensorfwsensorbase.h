@@ -106,8 +106,7 @@ private:
 
     QDBusServiceWatcher *watcher;
     bool m_available;
-    bool running;
-    bool m_attemptRestart;
+    bool m_startRequested;
 private slots:
     void connectToSensord();
     void sensordUnregistered();
