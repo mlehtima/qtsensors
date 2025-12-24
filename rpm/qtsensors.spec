@@ -11,7 +11,7 @@ Url:     http://www.qt.io/
 Source0: %{name}-%{version}.tar.bz2
 
 # filter qml/plugin provides
-%global __provides_exclude_from ^(%{_opt_qt5_archdatadir}/qml/.*\\.so|%{_opt_qt5_plugindir}/.*\\.so)$
+%global __provides_exclude_from ^(%{_opt_qt5_qmldir}/.*\\.so|%{_opt_qt5_plugindir}/.*\\.so)$
 %{?opt_qt5_default_filter}
 
 BuildRequires: make
@@ -67,8 +67,10 @@ done
 popd
 
 #Move system config file
-mkdir -p %{buildroot}/opt/qt5/etc/xdg/QtProject/
-mv %{buildroot}/etc/xdg/QtProject/Sensors.conf %{buildroot}/opt/qt5/etc/xdg/QtProject/Sensors.conf
+if [ "/etc" != %{_opt_qt5_settingsdir} ]; then
+  mkdir -p %{buildroot}%{_opt_qt5_settingsdir}/xdg/QtProject/
+  mv %{buildroot}/etc/xdg/QtProject/Sensors.conf %{buildroot}%{_opt_qt5_settingsdir}/xdg/QtProject/Sensors.conf
+fi
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -78,10 +80,10 @@ mv %{buildroot}/etc/xdg/QtProject/Sensors.conf %{buildroot}/opt/qt5/etc/xdg/QtPr
 %{_opt_qt5_libdir}/libQt5Sensors.so.5*
 %{_opt_qt5_plugindir}/sensorgestures/
 %{_opt_qt5_plugindir}/sensors/
-%{_opt_qt5_archdatadir}/qml/QtSensors/
+%{_opt_qt5_qmldir}/QtSensors/
 %dir %{_opt_qt5_libdir}/cmake/Qt5Sensors/
 %{_opt_qt5_libdir}/cmake/Qt5Sensors/Qt5Sensors_*Plugin.cmake
-%{_opt_qt5_prefix}/etc/xdg/QtProject/Sensors.conf
+%{_opt_qt5_settingsdir}/xdg/QtProject/Sensors.conf
 
 %files devel
 %{_opt_qt5_headerdir}/QtSensors/
